@@ -1,8 +1,11 @@
 var page = require('page');
-
+var template = require('./template');
+var empty = require('empty-element');
+var title = require('title');
 
 page('/', function(ctx, next){
-
+	
+	title('Platzigram');
 	var main = document.getElementById('main-container');
-	main.innerHTML = '<a href="/signup">SIGNUP</a>';
-});
+	empty(main).appendChild(template);
+})

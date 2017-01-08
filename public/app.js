@@ -2454,6 +2454,29 @@ process.chdir = function (dir) {
 process.umask = function() { return 0; };
 
 },{}],14:[function(require,module,exports){
+
+var orig = document.title;
+
+exports = module.exports = set;
+
+function set(str) {
+  var i = 1;
+  var args = arguments;
+  document.title = str.replace(/%[os]/g, function(_){
+    switch (_) {
+      case '%o':
+        return orig;
+      case '%s':
+        return args[i++];
+    }
+  });
+}
+
+exports.reset = function(){
+  set(orig);
+};
+
+},{}],15:[function(require,module,exports){
 var bel = require('bel') // turns template tag into DOM elements
 var morphdom = require('morphdom') // efficiently diffs + morphs two DOM elements
 var defaultEvents = require('./update-events.js') // default events to be copied when dom elements update
@@ -2491,7 +2514,7 @@ module.exports.update = function (fromNode, toNode, opts) {
   }
 }
 
-},{"./update-events.js":15,"bel":1,"morphdom":9}],15:[function(require,module,exports){
+},{"./update-events.js":16,"bel":1,"morphdom":9}],16:[function(require,module,exports){
 module.exports = [
   // attribute events (can be set with attributes)
   'onclick',
@@ -2529,18 +2552,36 @@ module.exports = [
   'onfocusout'
 ]
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var page = require('page');
+var template = require('./template');
+var empty = require('empty-element');
+var title = require('title');
 
 page('/', function (ctx, next) {
 
+	title('Platzigram');
 	var main = document.getElementById('main-container');
-	main.innerHTML = '<a href="/signup">SIGNUP</a>';
+	empty(main).appendChild(template);
 });
 
-},{"page":11}],17:[function(require,module,exports){
+},{"./template":18,"empty-element":3,"page":11,"title":14}],18:[function(require,module,exports){
+'use strict';
+
+var _templateObject = _taggedTemplateLiteral(['<div class="container timeline">\n\t<div class="row">\n\t\t<div class="col s12 m10 offset-m1 l6 offset-l3">\n\t\t\tContent\n\t\t</div>\n\t</div>\n</div>'], ['<div class="container timeline">\n\t<div class="row">\n\t\t<div class="col s12 m10 offset-m1 l6 offset-l3">\n\t\t\tContent\n\t\t</div>\n\t</div>\n</div>']);
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var yo = require('yo-yo');
+var layout = require('../layout');
+
+var template = yo(_templateObject);
+
+module.exports = layout(template);
+
+},{"../layout":21,"yo-yo":15}],19:[function(require,module,exports){
 'use strict';
 
 var page = require('page');
@@ -2551,14 +2592,12 @@ require('./signin');
 
 page();
 
-},{"./homepage":16,"./signin":19,"./signup":21,"page":11}],18:[function(require,module,exports){
+},{"./homepage":17,"./signin":22,"./signup":24,"page":11}],20:[function(require,module,exports){
 'use strict';
 
-var _templateObject = _taggedTemplateLiteral(['<div class="container">\n\t\t\t<div class="row">\n\t\t\t\t<div class="col s10 push-s1">\n\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t<div class="col m5 hide-on-small-only">\n\t\t\t\t\t\t\t<img class="iphone" src="iphone.png">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t', '\t\t\t\t\t\t\n\t\t\t\t\t</div>\t\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>'], ['<div class="container">\n\t\t\t<div class="row">\n\t\t\t\t<div class="col s10 push-s1">\n\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t<div class="col m5 hide-on-small-only">\n\t\t\t\t\t\t\t<img class="iphone" src="iphone.png">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t', '\t\t\t\t\t\t\n\t\t\t\t\t</div>\t\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>']);
+var _templateObject = _taggedTemplateLiteral(['<div class="container landing">\n\t\t\t<div class="row">\n\t\t\t\t<div class="col s10 push-s1">\n\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t<div class="col m5 hide-on-small-only">\n\t\t\t\t\t\t\t<img class="iphone" src="iphone.png">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t', '\t\t\t\t\t\t\n\t\t\t\t\t</div>\t\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>'], ['<div class="container landing">\n\t\t\t<div class="row">\n\t\t\t\t<div class="col s10 push-s1">\n\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t<div class="col m5 hide-on-small-only">\n\t\t\t\t\t\t\t<img class="iphone" src="iphone.png">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t', '\t\t\t\t\t\t\n\t\t\t\t\t</div>\t\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>']);
 
-function _taggedTemplateLiteral(strings, raw) {
-	return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
-}
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 var yo = require('yo-yo');
 
@@ -2566,27 +2605,40 @@ module.exports = function landing(box) {
 	return yo(_templateObject, box);
 };
 
-},{"yo-yo":14}],19:[function(require,module,exports){
+},{"yo-yo":15}],21:[function(require,module,exports){
+'use strict';
+
+var _templateObject = _taggedTemplateLiteral(['<div>\n\t<nav class="header">\n\t\t<div class="nav-wrapper">\n\t\t\t<div class="container">\n\t\t\t\t<div class="row">\n\t\t\t\t\t<div class="col s12 m6 offset-m1">\n\t\t\t\t\t\t<a href="" class="brand-logo platzigram">Platzigram</a>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="col s2 m6 push-s10 push-m10">\n\t\t\t\t\t\t<a href="#" class="btn btn-large btn-flat dropdown-button" data-activates="drop-user">\n\t\t\t\t\t\t\t<i class="fa fa-user" aria-hidden="true"></i>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t\t<ul id="drop-user" class="dropdown-content">\n\t\t\t\t\t\t\t<li><a href="#">Salir</a></li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</nav>\n\t<div>', '</div>\n\t</div>'], ['<div>\n\t<nav class="header">\n\t\t<div class="nav-wrapper">\n\t\t\t<div class="container">\n\t\t\t\t<div class="row">\n\t\t\t\t\t<div class="col s12 m6 offset-m1">\n\t\t\t\t\t\t<a href="" class="brand-logo platzigram">Platzigram</a>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class="col s2 m6 push-s10 push-m10">\n\t\t\t\t\t\t<a href="#" class="btn btn-large btn-flat dropdown-button" data-activates="drop-user">\n\t\t\t\t\t\t\t<i class="fa fa-user" aria-hidden="true"></i>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t\t<ul id="drop-user" class="dropdown-content">\n\t\t\t\t\t\t\t<li><a href="#">Salir</a></li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</nav>\n\t<div>', '</div>\n\t</div>']);
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var yo = require('yo-yo');
+
+module.exports = function layout(content) {
+	return yo(_templateObject, content);
+};
+
+},{"yo-yo":15}],22:[function(require,module,exports){
 'use strict';
 
 var page = require('page');
 var empty = require('empty-element');
 var template = require('./template');
+var title = require('title');
 
 page('/signin', function (ctx, next) {
 
+	title('Platzigram - Signin');
 	var main = document.getElementById('main-container');
 	empty(main).appendChild(template);
 });
 
-},{"./template":20,"empty-element":3,"page":11}],20:[function(require,module,exports){
+},{"./template":23,"empty-element":3,"page":11,"title":14}],23:[function(require,module,exports){
 'use strict';
 
-var _templateObject = _taggedTemplateLiteral(['<div class="col s12 m7">\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="signup-box">\n\t\t\t\t\t\t\t\t\t<h1 class="platzigram">Platzigram</h1>\n\t\t\t\t\t\t\t\t\t<form class="signup-form">\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-small-only">Iniciar sesi\xF3n con Facebook</a>\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-med-and-up">Iniciar sesi\xF3n</a>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class="divider"></div>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="username" placeholder="Nombre de usuario">\n\t\t\t\t\t\t\t\t\t\t\t<input type="password" name="password" placeholder="Contrase\xF1a">\n\t\t\t\t\t\t\t\t\t\t\t<button class="btn waves-effect waves-light btn-signup" type="submit">Inicia sesi\xF3n</button>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="login-box">\n\t\t\t\t\t\t\t\t\t\xBFNo tienes una cuenta? <a href="/signup">Reg\xEDstrate</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>'], ['<div class="col s12 m7">\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="signup-box">\n\t\t\t\t\t\t\t\t\t<h1 class="platzigram">Platzigram</h1>\n\t\t\t\t\t\t\t\t\t<form class="signup-form">\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-small-only">Iniciar sesi\xF3n con Facebook</a>\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-med-and-up">Iniciar sesi\xF3n</a>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class="divider"></div>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="username" placeholder="Nombre de usuario">\n\t\t\t\t\t\t\t\t\t\t\t<input type="password" name="password" placeholder="Contrase\xF1a">\n\t\t\t\t\t\t\t\t\t\t\t<button class="btn waves-effect waves-light btn-signup" type="submit">Inicia sesi\xF3n</button>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="login-box">\n\t\t\t\t\t\t\t\t\t\xBFNo tienes una cuenta? <a href="/signup">Reg\xEDstrate</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>']);
+var _templateObject = _taggedTemplateLiteral(['<div class="col s12 m7">\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="signup-box">\n\t\t\t\t\t\t\t\t\t<h1 class="platzigram">Platzigram</h1>\n\t\t\t\t\t\t\t\t\t<form class="signup-form">\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-small-only">Iniciar sesi\xF3n con Facebook</a>\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-med-and-up"><i class="fa fa-facebook-official"></i>Iniciar sesi\xF3n</a>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class="divider"></div>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="username" placeholder="Nombre de usuario">\n\t\t\t\t\t\t\t\t\t\t\t<input type="password" name="password" placeholder="Contrase\xF1a">\n\t\t\t\t\t\t\t\t\t\t\t<button class="btn waves-effect waves-light btn-signup" type="submit">Inicia sesi\xF3n</button>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="login-box">\n\t\t\t\t\t\t\t\t\t\xBFNo tienes una cuenta? <a href="/signup">Reg\xEDstrate</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>'], ['<div class="col s12 m7">\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="signup-box">\n\t\t\t\t\t\t\t\t\t<h1 class="platzigram">Platzigram</h1>\n\t\t\t\t\t\t\t\t\t<form class="signup-form">\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-small-only">Iniciar sesi\xF3n con Facebook</a>\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-med-and-up"><i class="fa fa-facebook-official"></i>Iniciar sesi\xF3n</a>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class="divider"></div>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="username" placeholder="Nombre de usuario">\n\t\t\t\t\t\t\t\t\t\t\t<input type="password" name="password" placeholder="Contrase\xF1a">\n\t\t\t\t\t\t\t\t\t\t\t<button class="btn waves-effect waves-light btn-signup" type="submit">Inicia sesi\xF3n</button>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="login-box">\n\t\t\t\t\t\t\t\t\t\xBFNo tienes una cuenta? <a href="/signup">Reg\xEDstrate</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>']);
 
-function _taggedTemplateLiteral(strings, raw) {
-  return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
-}
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 var yo = require('yo-yo');
 var landing = require('../landing');
@@ -2595,27 +2647,26 @@ var signinForm = yo(_templateObject);
 
 module.exports = landing(signinForm);
 
-},{"../landing":18,"yo-yo":14}],21:[function(require,module,exports){
+},{"../landing":20,"yo-yo":15}],24:[function(require,module,exports){
 'use strict';
 
 var page = require('page');
 var empty = require('empty-element');
 var template = require('./template');
+var title = require('title');
 
 page('/signup', function (ctx, next) {
-
+	title('Platzigram - Signup');
 	var main = document.getElementById('main-container');
 	empty(main).appendChild(template);
 });
 
-},{"./template":22,"empty-element":3,"page":11}],22:[function(require,module,exports){
+},{"./template":25,"empty-element":3,"page":11,"title":14}],25:[function(require,module,exports){
 'use strict';
 
-var _templateObject = _taggedTemplateLiteral(['<div class="col s12 m7">\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="signup-box">\n\t\t\t\t\t\t\t\t\t<h1 class="platzigram">Platzigram</h1>\n\t\t\t\t\t\t\t\t\t<form class="signup-form">\n\t\t\t\t\t\t\t\t\t\t<h2>Reg\xEDstrate para ver fotos de tus amigos estudiando en Platzi</h2>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-small-only">Iniciar sesi\xF3n con Facebook</a>\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-med-and-up">Iniciar sesi\xF3n</a>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class="divider"></div>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<input type="email" name="email" placeholder="Correo elecr\xF3nico">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="name" placeholder="Nombre cmpleto">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="username" placeholder="Nombre de usuario">\n\t\t\t\t\t\t\t\t\t\t\t<input type="password" name="password" placeholder="Contrase\xF1a">\n\t\t\t\t\t\t\t\t\t\t\t<button class="btn waves-effect waves-light btn-signup" type="submit">Reg\xEDstrate</button>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="login-box">\n\t\t\t\t\t\t\t\t\t\xBFTienes una cuenta? <a href="/signin">Entrar</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>'], ['<div class="col s12 m7">\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="signup-box">\n\t\t\t\t\t\t\t\t\t<h1 class="platzigram">Platzigram</h1>\n\t\t\t\t\t\t\t\t\t<form class="signup-form">\n\t\t\t\t\t\t\t\t\t\t<h2>Reg\xEDstrate para ver fotos de tus amigos estudiando en Platzi</h2>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-small-only">Iniciar sesi\xF3n con Facebook</a>\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-med-and-up">Iniciar sesi\xF3n</a>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class="divider"></div>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<input type="email" name="email" placeholder="Correo elecr\xF3nico">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="name" placeholder="Nombre cmpleto">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="username" placeholder="Nombre de usuario">\n\t\t\t\t\t\t\t\t\t\t\t<input type="password" name="password" placeholder="Contrase\xF1a">\n\t\t\t\t\t\t\t\t\t\t\t<button class="btn waves-effect waves-light btn-signup" type="submit">Reg\xEDstrate</button>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="login-box">\n\t\t\t\t\t\t\t\t\t\xBFTienes una cuenta? <a href="/signin">Entrar</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>']);
+var _templateObject = _taggedTemplateLiteral(['<div class="col s12 m7">\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="signup-box">\n\t\t\t\t\t\t\t\t\t<h1 class="platzigram">Platzigram</h1>\n\t\t\t\t\t\t\t\t\t<form class="signup-form">\n\t\t\t\t\t\t\t\t\t\t<h2>Reg\xEDstrate para ver fotos de tus amigos estudiando en Platzi</h2>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-small-only">Iniciar sesi\xF3n con Facebook</a>\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-med-and-up"><i class="fa fa-facebook-official"></i>Iniciar sesi\xF3n</a>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class="divider"></div>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<input type="email" name="email" placeholder="Correo elecr\xF3nico">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="name" placeholder="Nombre cmpleto">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="username" placeholder="Nombre de usuario">\n\t\t\t\t\t\t\t\t\t\t\t<input type="password" name="password" placeholder="Contrase\xF1a">\n\t\t\t\t\t\t\t\t\t\t\t<button class="btn waves-effect waves-light btn-signup" type="submit">Reg\xEDstrate</button>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="login-box">\n\t\t\t\t\t\t\t\t\t\xBFTienes una cuenta? <a href="/signin">Entrar</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>'], ['<div class="col s12 m7">\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="signup-box">\n\t\t\t\t\t\t\t\t\t<h1 class="platzigram">Platzigram</h1>\n\t\t\t\t\t\t\t\t\t<form class="signup-form">\n\t\t\t\t\t\t\t\t\t\t<h2>Reg\xEDstrate para ver fotos de tus amigos estudiando en Platzi</h2>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-small-only">Iniciar sesi\xF3n con Facebook</a>\n\t\t\t\t\t\t\t\t\t\t\t<a class="btn btn-fb hide-on-med-and-up"><i class="fa fa-facebook-official"></i>Iniciar sesi\xF3n</a>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class="divider"></div>\n\t\t\t\t\t\t\t\t\t\t<div class="section">\n\t\t\t\t\t\t\t\t\t\t\t<input type="email" name="email" placeholder="Correo elecr\xF3nico">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="name" placeholder="Nombre cmpleto">\n\t\t\t\t\t\t\t\t\t\t\t<input type="text" name="username" placeholder="Nombre de usuario">\n\t\t\t\t\t\t\t\t\t\t\t<input type="password" name="password" placeholder="Contrase\xF1a">\n\t\t\t\t\t\t\t\t\t\t\t<button class="btn waves-effect waves-light btn-signup" type="submit">Reg\xEDstrate</button>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</form>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\n\t\t\t\t\t\t\t<div class="row">\n\t\t\t\t\t\t\t\t<div class="login-box">\n\t\t\t\t\t\t\t\t\t\xBFTienes una cuenta? <a href="/signin">Entrar</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t</div>']);
 
-function _taggedTemplateLiteral(strings, raw) {
-  return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
-}
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 var yo = require('yo-yo');
 var landing = require('../landing');
@@ -2624,4 +2675,4 @@ var signupForm = yo(_templateObject);
 
 module.exports = landing(signupForm);
 
-},{"../landing":18,"yo-yo":14}]},{},[17]);
+},{"../landing":20,"yo-yo":15}]},{},[19]);
