@@ -2,32 +2,46 @@ var page = require('page');
 var template = require('./template');
 var empty = require('empty-element');
 var title = require('title');
+//var request = require('superagent');
+var request = require('axios');
+var header= require('../header');
 
-page('/', function(ctx, next){
+page('/',header , asyncLoad, function(ctx, next){
 	
 	title('Platzigram');
 	var main = document.getElementById('main-container');
-	var pictures = [
-	{
-		user:{
-			username: 'yrraRojas',
-			avatar: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/12814612_10207788879616537_5604103499298726415_n.jpg?oh=00e8465b03ddebc59be7a68f301ee8df&oe=591F5F82'
-		},
-		url: 'office.jpg',
-		likes: 10,
-		liked: true,
-		createdAt: new Date()
-	},
-	{
-		user:{
-			username: 'yrraRojas',
-			avatar: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/12814612_10207788879616537_5604103499298726415_n.jpg?oh=00e8465b03ddebc59be7a68f301ee8df&oe=591F5F82'
-		},
-		url: 'office.jpg',
-		likes: 2,
-		liked: true,
-		createdAt: new Date().setDate(new Date().getDate() - 10)
-	}
-	];
-	empty(main).appendChild(template(pictures));
+	
+	empty(main).appendChild(template(ctx.pictures));
 })
+
+function loadPicturesAxios(ctx, next){
+	request
+		.get('/api/pictures')
+		.then(function(res){
+			ctx.pictures = res.data;
+			next();
+		})
+		.catch(function(err){
+			console.log(err);
+		})
+}
+
+async function asyncLoad(ctx, next){
+	try{
+		ctx.pictures = await fetch('/api/pictures').then(res => res.json())
+		next();
+	}catch (err){
+		return console.log(err);
+	}
+}
+
+/*function loadPictures(ctx, next){
+	request
+		.get('/api/pictures')
+		.end(function(err, res){
+			if(err) return console.log(err);
+
+			ctx.pictures = res.body;
+			next();
+		})
+}*/
