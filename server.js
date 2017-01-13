@@ -54,10 +54,7 @@ app.get('/api/pictures', function(req, res){
 	}
 	];
 
-	setTimeout(function(){
-		res.send(pictures);	
-	}, 2000)
-	
+	res.send(pictures);	
 
 })
 
@@ -68,6 +65,51 @@ app.post('/api/pictures', function(req, res){
 		}
 		res.send('File uploaded');
 	})
+})
+
+app.get('/api/user/:username', function(eq, res){
+	const user = {
+		username: 'yrraRojas',
+		avatar: 'https://scontent-mia1-1.cdninstagram.com/t51.2885-19/11821309_100705523617172_1224966390_a.jpg',
+		pictures: [
+			{
+				id: 1,
+				src: 'https://platzi.com/blog/wp-content/uploads/2015/06/vinizzio-estudiante-platzi.jpg',
+				likes: 4
+			},
+			{
+				id: 2,
+				src: 'https://platzi.com/blog/wp-content/uploads/2015/06/vicky-jaqueline-platzi.jpg',
+				likes: 10
+			},
+			{
+				id: 3,
+				src: 'https://platzi.com/blog/wp-content/uploads/2015/06/miguel-platzi.jpg',
+				likes: 2
+			},
+			{
+				id: 4,
+				src: 'https://platzi.com/blog/wp-content/uploads/2015/06/Leonidas.jpg',
+				likes: 56
+			},
+			{
+				id: 5,
+				src: 'https://platzi.com/blog/wp-content/uploads/2015/06/alejandro-platzi.jpg',
+				likes: 0
+			},
+			{
+				id: 6,
+				src: 'https://platzi.com/blog/wp-content/uploads/2015/06/Santiago.jpg',
+				likes: 100
+			}
+		]
+	}
+
+	res.send(user);
+})
+
+app.get('/:username', function(req, res){
+	res.render('index', {title: `Platzigram - ${req.params.username}`})
 })
 
 app.listen(3000, function(err){
